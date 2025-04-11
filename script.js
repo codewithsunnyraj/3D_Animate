@@ -4,20 +4,36 @@ const scene = new THREE.Scene();
 const geometry = new THREE.BoxGeometry(2, 2, 2);
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 
-const box = new THREE.Mesh(geometry, material);
-scene.add(box);
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
 
-const size = {
-  width: 700,
-  height: 500,
+const sizes = {
+  width: window.innerWidth,
+  height: window.innerHeight,
 };
-const camera = new THREE.PerspectiveCamera(75, size.width / size.height);
-camera.position.z = 4;
+
+const camera = new THREE.PerspectiveCamera(
+  75,
+  sizes.width / sizes.height,
+  0.1,
+  100
+);
+camera.position.z = 3;
 scene.add(camera);
 
 //rendering
-const target = document.querySelector(".wbgl");
-const renderer = new THREE.WebGLRenderer({ canvas: target });
+const canvas = document.querySelector(".wbgl");
+const renderer = new THREE.WebGLRenderer({ canvas });
 
-renderer.setSize(size.width, size.height);
-renderer.render(scene, camera);
+renderer.setSize(sizes.width, sizes.height);
+
+//Animate
+const tick = () => {
+ cube.rotation.y += 0.01;
+  cube.rotation.x += 0.01; 
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(tick);
+};
+
+tick();

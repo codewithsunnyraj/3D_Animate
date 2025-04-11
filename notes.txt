@@ -1,0 +1,201 @@
+🔶 1.	Scene – Jagah Jahan Sab Kuch Hota Hai
+const scene = new THREE.Scene();
+Socho jaise ek khaali room ya stage hai jahan tum apna 3D objects (jaise cube, camera, light) rakhte ho. Yeh "scene" us jagah ko banata hai.
+
+
+
+🔶 2.	Geometry – Shape ka structure (size & point)
+const geometry = new THREE.BoxGeometry();
+Geometry ka matlab hai shape ka design. Is example me humne ek box (cube) banaya hai. Agar tum chaho to dusri geometries bhi bana
+
+
+
+
+🔶 3.	Material – Us shape ka rang ,texture,shine
+const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+Material decide karta hai ki shape kaisa dikhega:
+Color
+Texture (image lagana)
+Lighting ka effect lena ya nahi lena
+
+
+🔶 4. Mesh – Geometry + Material = Real Object
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+
+
+
+🔶 5. Camera – Aankh Jisse Tum Scene Ko Dekhte Ho
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
+camera.position.z = 3;
+scene.add(camera);
+Scene me object toh hai, lekin usse dekhne ke liye Camera chahiye. Ye camera 3 cheeze leta hai:
+75: field of view (kitna area dikh raha hai)
+sizes.width / sizes.height: ratio
+0.1, 100: kitni door aur kitni nazdeek tak cheeze dikhengi
+Aur fir camera.position.z = 3 matlab camera ko thoda door le jaa rahe hain taaki cube dikhe.
+
+
+ 🔶 Bonus: Rotation Wala Part
+ cube.rotation.y += 0.01;
+ cube.rotation.x += 0.01;
+ Ye line har frame me chal rahi hai — isse cube ghoomta rahta hai.
+ rotation.y → left-right ghoomna
+ rotation.x → up-down ghoomna
+ Har frame me 0.01 radian ghoom raha hai. Isse animation ban raha hai.
+
+
+
+🎥 Renderer – Sab Kuch Draw Karne Wala
+const renderer = new THREE.WebGLRenderer({ canvas });
+renderer.setSize(sizes.width, sizes.height);
+renderer.render(scene, camera);
+Ye part screen par tumhara cube dikhata hai. Renderer use karta hai WebGL ko jo browser me fast 3D dikhata hai.
+
+
+
+🔁 Animation Loop (Chalta Rahta Hai)
+const tick = () => {
+  cube.rotation.x += 0.01;
+  cube.rotation.y += 0.01;
+
+  renderer.render(scene, camera);
+  requestAnimationFrame(tick);
+};
+
+tick();
+tick() ek baar nahi, baar-baar chalti hai.
+requestAnimationFrame() browser ko bolta hai: “agle frame me phir chalna”.
+
+
+Concept	              Explanation
+Scene	              Room jahan sab cheeze hongi
+Geometry              Object ka shape (cube, sphere)
+Material              Us shape ka look (color, texture)
+Mesh	              Geometry + Material = Real shape
+Camera	              Jisse tum scene ko dekh rahe ho
+Renderer              Jo screen pe sab dikhata hai
+Rotation              Object ko animate karne ke liye
+
+
+
+
+/* end */
+
+
+
+/*preloader folder part start*/
+✅ 1. GSAP Animation Basics (Line Animation)
+       gsap.to("#line", {
+           width: "100%",
+           duration: 1.5,
+           ease: "power2.inOut",
+           onComplete: () => {
+             // next animation
+           }
+         });
+
+
+         gsap.to() → kisi element ko animate karta hai.
+         ease → animation ka smooth hona.
+         onComplete → animation khatam hone par kya karna hai.
+
+
+  ✅ 2. FontLoader from Three.js
+           const loader = new THREE.FontLoader();
+             loader.load("https://threejs.org/examples/fonts/helvetiker_regular.typeface.json", (font) => {
+               // use font here
+             });
+
+             FontLoader se tum external font ko load karte ho.
+             Yeh font chahiye hota hai 3D text banane ke liye.
+             JSON format me font load hota hai.
+
+
+    ✅ 3. TextGeometry        
+
+           const textGeometry = new THREE.TextGeometry("sunny", {
+               font: font,
+               size: 1,
+               height: 0.3,
+             });
+
+             TextGeometry se 3D likha ja sakta hai.
+             size: text ka size
+             height: depth ya thickness
+
+    ✅ 4. center() Method on Geometry
+            textGeometry.center();
+            Text ko center me lane ke liye use hota hai.
+            Warna text screen ke corner me banega.
+
+    ✅ 5. MeshStandardMaterial
+           const textMaterial = new THREE.MeshStandardMaterial({ color: 0xffff00 });
+           MeshStandardMaterial → lighting react karta hai.
+                color: 0xffff00 → yellow text
+                Better lighting support than MeshBasicMaterial.
+
+     ✅ 6. PointLight
+           const light = new THREE.PointLight(0xffffff, 1);
+            light.position.set(2, 2, 5);
+            scene.add(light);
+            Lighting system in 3D.
+            PointLight → ek chhota bulb jaisa light source.
+            Light ki power aur position set karte ho.
+      
+      ✅ 7. gsap.fromTo() for rotation
+            gsap.fromTo(textMesh.rotation, 
+            { y: -Math.PI }, 
+            { y: 0, duration: 2, ease: "power2.out" }
+            );
+
+
+
+
+Concept	                             Use Kya Hai
+GSAP to()	                           Animate line width
+GSAP onComplete	                     Agla kaam animation ke baad
+GSAP fromTo()	                        Start-end animation (rotation)
+FontLoader	                          External 3D font load karne ke liye
+TextGeometry	                        3D me likhne ke liye
+.center()	                           Text ko screen ke center me lana
+MeshStandardMaterial	                Lighting ke saath realistic material
+PointLight	                          3D object pe roshni padne ke liye
+
+
+/*preloader folder part end*/
+
+
+
+
+
+
+
+/*Gsap start*/
+🔵 gsap.to()
+      ➤ Matlab:
+      "Element ki current position/value se lekar kisi final value tak le jao."
+
+
+🟢 gsap.from()
+       ➤ Matlab:
+      "Element ko ek specific value se start karwao, aur uski original value tak wapas lao."
+
+
+🟣 gsap.fromTo()
+        ➤ Matlab:
+        "Start value bhi specify karo, aur end value bhi. Tum pura control chahte ho."
+
+
+
+
+        Function	      Kya karta hai?	                Kab use karein?
+         gsap.to()	Abhi jahan hai, wahan se aage le jao	Jab tum current state se animate karna chaho
+         gsap.from()	Piche se laa ke normal state tak lao	Entry animations ke liye best
+         gsap.fromTo()	Start + End dono tum hi define karo	Full control chahiye ho
+
+
+
+
+
+

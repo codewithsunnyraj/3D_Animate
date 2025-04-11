@@ -1,0 +1,26 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  background: black;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: block;
+  z-index: 1;
+}
+
+.preloader-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 4px;
+  width: 0;
+  background-color: white;
+  z-index: 2;
+}
